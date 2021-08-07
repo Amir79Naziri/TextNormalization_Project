@@ -209,6 +209,7 @@ def _(
         fraction_separator: str = ' ',
         ordinal_denominator: bool = True,
         scientific_separator: str = ' در ده به توان ',
+        mode: int = 1
 ) -> str:
     numerator = number.numerator
     if numerator < 0:
@@ -242,6 +243,7 @@ def _(
         fraction_separator: str = ' ',
         ordinal_denominator: bool = True,
         scientific_separator: str = ' در ده به توان ',
+        mode: int = 1
 ) -> str:
     """Return the fa-word form for the given int."""
     if number == 0:
@@ -310,12 +312,12 @@ def _point_words(
         if before_p == '0':
             if after_p == '0':
                 return 'صفر'
-            if mode == 1:
+            if mode == 0:
                 return _natural_words(after_p)
             else:
                 return _natural_words(after_p) + DECIMAL_PLACES[len(after_p)]
         if after_p != '0':
-            if mode == 1:
+            if mode == 0:
                 return (
                         _natural_words(before_p)
                         + decimal_separator
