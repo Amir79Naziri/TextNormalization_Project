@@ -4,6 +4,7 @@ from functools import singledispatch
 from itertools import chain
 from typing import Union
 import re
+import random
 
 ONES = [
     '',
@@ -107,7 +108,8 @@ def words(
         fraction_separator: str = ' ',
         ordinal_denominator: bool = True,
         scientific_separator: str = ' در ده به توان ',
-        mode: int = 1
+        mode: int = 1,
+        random_result=False
 ) -> str:
     if isinstance(number, list):
         if len(number) == 1:
@@ -115,6 +117,17 @@ def words(
         else:
             raise TypeError('invalid input type for words function', number)
 
+    if random_result:
+        positive = ''
+        negative = random.choice(['منفی ', 'منهای '])
+        decimal = random.choice([(1, ' و '), (0, ' ممیز '), (1, ' ممیز ')])
+        decimal_separator = decimal[1]
+        mode = decimal[0]
+        fraction = random.choice([(True, ' '), (False, ' تقسیم بر ')])
+        fraction_separator = fraction[1]
+        ordinal_denominator = fraction[0]
+        scientific_separator = random.choice([' در ده به توان ', ' ضربدر ده به قوهٔ ', ' ضربدر ده به توان ',
+                                              ' در ده به نمای '])
     if isinstance(number, str):
         number_ = re.findall(r'[-+]?\d+e[-+]?\d+|[-+]?\d+/[-+]?\d+|[-+]?\d*\.\d+|[-+]?\d+', number)
 

@@ -123,13 +123,14 @@ def find_measurement(
 
 
 def random_v(number, measurement, prefix=None):
-    mode = random.randint(0, 1)
-    positive = random.choice(['', 'مثبت '])
+    positive = ''
     negative = random.choice(['منفی ', 'منهای '])
-    decimal_separator = random.choice([' و ', ' ممیز '])
+    decimal = random.choice([(1, ' و '), (0, ' ممیز '), (1, ' ممیز ')])
+    decimal_separator = decimal[1]
+    mode = decimal[0]
     fraction = random.choice([(True, ' '), (False, ' تقسیم بر ')])
     scientific_separator = random.choice([' در ده به توان ', ' ضربدر ده به قوهٔ ', ' ضربدر ده به توان ',
-                                          ' در ده به نمای'])
+                                          ' در ده به نمای '])
     if prefix is None:
         return num2words.words(number, positive=positive, negative=negative, mode=mode,
                                decimal_separator=decimal_separator, scientific_separator=scientific_separator,
