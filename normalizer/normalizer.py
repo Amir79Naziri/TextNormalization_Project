@@ -13,7 +13,8 @@ def part_normalizer(
         max_seq: int,
         normalizer_module,
         reverse: bool = False,
-        classifier=None
+        classifier=None,
+        random_result: bool = False
 ) -> list:
     if reverse:
         counter = max_seq
@@ -42,10 +43,12 @@ def part_normalizer(
                             frame = ('{', '}')
 
                     if counter == 1 and frame is not None:
-                        result = normalizer_module.words([tokenized_text[i:i + counter][0][1:-1]])
+                        result = normalizer_module.words([tokenized_text[i:i + counter][0][1:-1]],
+                                                         random_result=random_result)
                         result = frame[0] + result + frame[1]
                     else:
-                        result = normalizer_module.words(tokenized_text[i:i + counter])
+                        result = normalizer_module.words(tokenized_text[i:i + counter],
+                                                         random_result=random_result)
                     change_list.append((i, result))
                     if counter > 1:
                         remove_list.extend(list(range(i + 1, i + counter)))
@@ -85,18 +88,26 @@ def phone_classifier(
 
 
 def normalize(
-        tokenized_text: list
+        tokenized_text: list,
+        mode: str
 ) -> str:
-    res = part_normalizer(tokenized_text, max_seq=5, normalizer_module=date2words)
-    res = part_normalizer(res, max_seq=2, normalizer_module=time2words, reverse=True)
-    res = part_normalizer(res, max_seq=1, normalizer_module=phone2words, reverse=True, classifier=phone_classifier)
-    res = part_normalizer(res, max_seq=2, normalizer_module=currency2words)
-    res = part_normalizer(res, max_seq=2, normalizer_module=measurement2words)
-    res = part_normalizer(res, max_seq=1, normalizer_module=num2words)
+    if mode == 'TTS':
+        random_result = False
+    elif mode == 'STT':
+        random_result = True
+    else:
+        raise TypeError('TTS or STT does not declared', mode)
+    res = part_normalizer(tokenized_text, max_seq=5, normalizer_module=date2words, random_result=random_result)
+    res = part_normalizer(res, max_seq=2, normalizer_module=time2words, reverse=True, random_result=random_result)
+    res = part_normalizer(res, max_seq=1, normalizer_module=phone2words, reverse=True,
+                          classifier=phone_classifier, random_result=random_result)
+    res = part_normalizer(res, max_seq=2, normalizer_module=currency2words, random_result=random_result)
+    res = part_normalizer(res, max_seq=2, normalizer_module=measurement2words, random_result=random_result)
+    res = part_normalizer(res, max_seq=1, normalizer_module=num2words, random_result=random_result)
     normalized = re.sub(r'\s+', ' ', ' '.join(res)).strip()
     return normalized
 
 
 if __name__ == '__main__':
     txt = input().split()
-    print(normalize(txt))
+    print(normalize(txt, 'TTS'))
