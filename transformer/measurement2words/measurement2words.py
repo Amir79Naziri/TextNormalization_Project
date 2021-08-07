@@ -2,6 +2,7 @@ from typing import Union
 from functools import singledispatch
 from transformer.num2words import num2words
 import re
+import random
 
 MEASUREMENTS = {
     'g': 'گرم',
@@ -79,19 +80,22 @@ PREFIX = {
 @singledispatch
 def words(
         measure: Union[str, list],
+        random_result=False
 ) -> str:
     raise TypeError('invalid input type for words function', measure)
 
 
 def find_measurement(
-        measure: str
+        measure: str,
+        random_result=False
 ) -> str:
-    match = re.search(r'[-+]?\d+e[-+]?\d+|[-+]?\d+/[-+]?\d+|[-+]?\d*\.\d+|[-+]?\d+', measure)
+    match = re.search(r'[-+]?\d+e[-+]?\d*\.\d+|[-+]?\d+e[-+]?\d+|[-+]?\d+/[-+]?\d+|[-+]?\d*\.\d+|[-+]?\d+', measure)
     if match is not None:
         number = match.group()
         while match is not None:
             measure = measure[match.end():]
-            match = re.search(r'[-+]?\d+e[-+]?\d+|[-+]?\d+/[-+]?\d+|[-+]?\d*\.\d+|[-+]?\d+', measure)
+            match = re.search(r'[-+]?\d+e[-+]?\d*\.\d+|[-+]?\d+e[-+]?\d+|[-+]?\d+/[-+]?\d+|[-+]?\d*\.\d+|[-+]?\d+',
+                              measure)
 
         for meas in MEASUREMENTS:
             match = re.search(meas, measure)
@@ -105,25 +109,52 @@ def find_measurement(
                 if match is None:
                     continue
                 prefix = match.group()
+                if not random_result:
+                    return num2words.words(number) + \
+                           ' ' + PREFIX[prefix] + ' ' + MEASUREMENTS[measurement]
+                else:
+                    return random_v(number, measurement, prefix)
 
-                return num2words.words(number, positive='مثبت ') + \
-                    ' ' + PREFIX[prefix] + ' ' + MEASUREMENTS[measurement]
-
-            return num2words.words(number, positive='مثبت ') + ' ' + MEASUREMENTS[measurement]
+            if not random_result:
+                return num2words.words(number) + ' ' + MEASUREMENTS[measurement]
+            else:
+                return random_v(number, measurement)
     raise TypeError('invalid input type for words function', measure)
+
+
+def random_v(number, measurement, prefix=None):
+    mode = random.randint(0, 1)
+    positive = random.choice(['', 'مثبت '])
+    negative = random.choice(['منفی ', 'منهای '])
+    decimal_separator = random.choice([' و ', ' ممیز '])
+    fraction = random.choice([(True, ' '), (False, ' تقسیم بر ')])
+    scientific_separator = random.choice([' در ده به توان ', ' ضربدر ده به قوهٔ ', ' ضربدر ده به توان ',
+                                          ' در ده به نمای'])
+    if prefix is None:
+        return num2words.words(number, positive=positive, negative=negative, mode=mode,
+                               decimal_separator=decimal_separator, scientific_separator=scientific_separator,
+                               fraction_separator=fraction[1], ordinal_denominator=fraction[0]) + \
+               ' ' + MEASUREMENTS[measurement]
+    else:
+        return num2words.words(number, positive=positive, negative=negative, mode=mode,
+                               decimal_separator=decimal_separator, scientific_separator=scientific_separator,
+                               fraction_separator=fraction[1], ordinal_denominator=fraction[0]) + \
+               ' ' + PREFIX[prefix] + ' ' + MEASUREMENTS[measurement]
 
 
 @words.register(str)
 def _(
         measure: str,
+        random_result=False
 ) -> str:
-    return find_measurement(measure)
+    return find_measurement(measure, random_result=random_result)
 
 
 @words.register(list)
 def _(
         measure: list,
+        random_result=False
 ) -> str:
     if 1 <= len(measure) <= 2:
-        return find_measurement(''.join(measure))
+        return find_measurement(''.join(measure), random_result=random_result)
     raise TypeError('invalid input type for words function', measure)
