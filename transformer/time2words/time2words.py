@@ -134,15 +134,13 @@ def _(
 ) -> str:
     if len(time) == 1:
         return find_time(''.join(time), random_result)
-    elif len(time) == 2 and \
+    elif 4 >= len(time) >= 2 and \
             (re.search('AM|am|Am|aM', time[0]) is not None) or \
             (re.search('AM|am|Am|aM', time[1]) is not None) or \
             (re.search('PM|pm|Pm|pM', time[0]) is not None) or \
             (re.search('PM|pm|Pm|pM', time[1]) is not None) or \
-            (re.search('بعد ازظهر|بعداز ظهر|بعد از ظهر|بعدازظهر', time[0]) is not None) or \
-            (re.search('بعد ازظهر|بعداز ظهر|بعد از ظهر|بعدازظهر', time[1]) is not None) or \
-            (re.search('قبل از ظهر|قبل ازظهر', time[0]) is not None) or \
-            (re.search('قبل از ظهر|قبل ازظهر', time[1]) is not None) or \
+            (re.search('بعد ازظهر|بعداز ظهر|بعد از ظهر|بعدازظهر', ''.join(time)) is not None) or \
+            (re.search('قبل از ظهر|قبل ازظهر', ''.join(time)) is not None) or \
             (re.search('دقیقه', time[0]) is not None) or \
             (re.search('دقیقه', time[1]) is not None):
         return find_time(''.join(time), random_result)

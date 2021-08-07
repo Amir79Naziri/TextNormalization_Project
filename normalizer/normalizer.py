@@ -98,8 +98,8 @@ def normalize(
     else:
         raise TypeError('TTS or STT does not declared', mode)
     res = part_normalizer(tokenized_text, max_seq=5, normalizer_module=date2words, random_result=random_result)
-    res = part_normalizer(res, max_seq=2, normalizer_module=time2words, reverse=True, random_result=random_result)
-    res = part_normalizer(res, max_seq=1, normalizer_module=phone2words, reverse=True,
+    res = part_normalizer(res, max_seq=4, normalizer_module=time2words, reverse=True, random_result=random_result)
+    res = part_normalizer(res, max_seq=1, normalizer_module=phone2words,
                           classifier=phone_classifier, random_result=random_result)
     res = part_normalizer(res, max_seq=2, normalizer_module=currency2words, random_result=random_result)
     res = part_normalizer(res, max_seq=2, normalizer_module=measurement2words, random_result=random_result)
@@ -110,4 +110,4 @@ def normalize(
 
 if __name__ == '__main__':
     txt = input().split()
-    print(normalize(txt, 'TTS'))
+    print(normalize(txt, 'STT'))
