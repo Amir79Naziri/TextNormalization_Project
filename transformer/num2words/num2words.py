@@ -109,7 +109,7 @@ def words(
         ordinal_denominator: bool = True,
         scientific_separator: str = ' در ده به توان ',
         mode: int = 1,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     if isinstance(number, list):
         if len(number) == 1:

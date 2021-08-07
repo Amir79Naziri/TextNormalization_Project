@@ -24,14 +24,14 @@ KEYWORDS = [
 @singledispatch
 def words(
         time: Union[str, list],
-        random_result=False
+        random_result: bool = False
 ) -> str:
     raise TypeError('invalid input type for words function', time)
 
 
 def find_phone(
         phone: str,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     match = re.search(r'[+]', phone)
     if match is not None and match.start() == 0:
@@ -107,7 +107,7 @@ def v1(phone):
 @words.register(str)
 def _(
         phone: str,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     return find_phone(phone, random_result)
 
@@ -115,12 +115,9 @@ def _(
 @words.register(list)
 def _(
         phone: list,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     if len(phone) == 1:
         return find_phone(''.join(phone), random_result)
     else:
         raise TypeError('invalid input type for words function', phone)
-
-
-

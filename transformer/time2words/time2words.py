@@ -15,7 +15,7 @@ import random
 @singledispatch
 def words(
         time: Union[str, list],
-        random_result=False
+        random_result: bool = False
 ) -> str:
     raise TypeError('invalid input type for words function', time)
 
@@ -122,7 +122,7 @@ def v4(hours, minutes, seconds, mode):
 @words.register(str)
 def _(
         time: str,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     return find_time(time, random_result)
 
@@ -130,7 +130,7 @@ def _(
 @words.register(list)
 def _(
         time: list,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     if len(time) == 1:
         return find_time(''.join(time), random_result)

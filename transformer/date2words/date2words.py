@@ -103,14 +103,14 @@ MONTHS = [
 @singledispatch
 def words(
         date: Union[str, list],
-        random_result=False
+        random_result: bool = False
 ) -> str:
     raise TypeError('invalid input type for words function', date)
 
 
 def find_date_std(
         date: str, delimiter: tuple = ('/', '.', '-'),
-        random_result=False
+        random_result: bool = False
 ) -> str:
     for de in delimiter:
         sp = date.split(de)
@@ -161,7 +161,7 @@ def v4(day, number_month, year):
 @words.register(str)
 def _(
         date: str,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     return find_date_std(date, random_result=random_result)
 
@@ -169,7 +169,7 @@ def _(
 @words.register(list)
 def _(
         date: list,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     length = len(date)
     if length == 1:

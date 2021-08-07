@@ -80,14 +80,14 @@ PREFIX = {
 @singledispatch
 def words(
         measure: Union[str, list],
-        random_result=False
+        random_result: bool = False
 ) -> str:
     raise TypeError('invalid input type for words function', measure)
 
 
 def find_measurement(
         measure: str,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     match = re.search(r'[-+]?\d+e[-+]?\d*\.\d+|[-+]?\d+e[-+]?\d+|[-+]?\d+/[-+]?\d+|[-+]?\d*\.\d+|[-+]?\d+', measure)
     if match is not None:
@@ -146,7 +146,7 @@ def random_v(number, measurement, prefix=None):
 @words.register(str)
 def _(
         measure: str,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     return find_measurement(measure, random_result=random_result)
 
@@ -154,7 +154,7 @@ def _(
 @words.register(list)
 def _(
         measure: list,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     if 1 <= len(measure) <= 2:
         return find_measurement(''.join(measure), random_result=random_result)

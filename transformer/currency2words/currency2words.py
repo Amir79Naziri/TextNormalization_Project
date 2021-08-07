@@ -30,14 +30,14 @@ CURRENCY2WORD = {
 @singledispatch
 def words(
         currency: Union[str, list],
-        random_result=False
+        random_result: bool = False
 ) -> str:
     raise TypeError('invalid input type for words function', currency)
 
 
 def find_currency(
         currency: str,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     for cur in CURRENCY2WORD:
         if cur == '$':
@@ -124,7 +124,7 @@ def v3(number, currency_unit):
 @words.register(str)
 def _(
         currency: str,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     return find_currency(currency, random_result=random_result)
 
@@ -132,7 +132,7 @@ def _(
 @words.register(list)
 def _(
         currency: list,
-        random_result=False
+        random_result: bool = False
 ) -> str:
     if 1 <= len(currency) <= 2:
         return find_currency(''.join(currency), random_result=random_result)
