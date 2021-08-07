@@ -107,6 +107,7 @@ def words(
         fraction_separator: str = ' ',
         ordinal_denominator: bool = True,
         scientific_separator: str = ' در ده به توان ',
+        mode: int = 1
 ) -> str:
     if isinstance(number, list):
         if len(number) == 1:
@@ -121,13 +122,13 @@ def words(
             index = number.index(n)
             res = __words(n, positive=positive, negative=negative, decimal_separator=decimal_separator,
                           fraction_separator=fraction_separator, ordinal_denominator=ordinal_denominator,
-                          scientific_separator=scientific_separator)
+                          scientific_separator=scientific_separator, mode=mode)
             number = number[:index] + ' ' + res + ' ' + number[index + len(n):]
         return number
     else:
         return __words(number, positive=positive, negative=negative, decimal_separator=decimal_separator,
                        fraction_separator=fraction_separator, ordinal_denominator=ordinal_denominator,
-                       scientific_separator=scientific_separator)
+                       scientific_separator=scientific_separator, mode=mode)
 
 
 # noinspection PyUnusedLocal
@@ -140,6 +141,7 @@ def __words(
         fraction_separator: str = ' ',
         ordinal_denominator: bool = True,
         scientific_separator: str = ' در ده به توان ',
+        mode: int = 1
 ) -> str:
     """Return the word form of number.
 
@@ -161,6 +163,7 @@ def _(
         fraction_separator: str = ' ',
         ordinal_denominator: bool = True,
         scientific_separator: str = ' در ده به توان ',
+        mode: int = 1
 ) -> str:
     # Normalize the str
     number = str(number).strip().translate(_NORMALIZATION_TABLE)
@@ -192,7 +195,7 @@ def _(
                 + _natural_words(denominator)
         )
     return sign + _exp_words(
-        numerator, positive, negative, decimal_separator, scientific_separator,
+        numerator, positive, negative, decimal_separator, scientific_separator, mode=mode
     )
 
 
@@ -258,6 +261,7 @@ def _(
         fraction_separator: str = ' ',
         ordinal_denominator: bool = True,
         scientific_separator: str = ' در ده به توان ',
+        mode: int = 1
 ) -> str:
     """Return the fa-word form for the given float."""
     if number == 0:
@@ -270,9 +274,10 @@ def _(
             negative,
             decimal_separator,
             scientific_separator,
+            mode=mode
         )
     return positive + _exp_words(
-        str_num, positive, negative, decimal_separator, scientific_separator,
+        str_num, positive, negative, decimal_separator, scientific_separator, mode=mode
     )
 
 
@@ -282,35 +287,47 @@ def _exp_words(
         negative: str,
         decimal_separator: str,
         scientific_separator: str,
+        mode: int = 1
 ) -> str:
     # exponent
     base, e, exponent = number.partition('e')
     if exponent:
         return (
-                _point_words(base, decimal_separator=decimal_separator)
+                _point_words(base, decimal_separator=decimal_separator, mode=mode)
                 + scientific_separator
                 + __words(int(exponent), positive, negative)
         )
-    return _point_words(base, decimal_separator=decimal_separator)
+    return _point_words(base, decimal_separator=decimal_separator, mode=mode)
 
 
 def _point_words(
         number: str,
         decimal_separator: str,
+        mode: int = 1
 ) -> str:
     before_p, p, after_p = number.partition('.')
     if after_p:
         if before_p == '0':
             if after_p == '0':
                 return 'صفر'
-            return _natural_words(after_p) + DECIMAL_PLACES[len(after_p)]
+            if mode == 1:
+                return _natural_words(after_p)
+            else:
+                return _natural_words(after_p) + DECIMAL_PLACES[len(after_p)]
         if after_p != '0':
-            return (
-                    _natural_words(before_p)
-                    + decimal_separator
-                    + _natural_words(after_p)
-                    + DECIMAL_PLACES[len(after_p)]
-            )
+            if mode == 1:
+                return (
+                        _natural_words(before_p)
+                        + decimal_separator
+                        + _natural_words(after_p)
+                )
+            else:
+                return (
+                        _natural_words(before_p)
+                        + decimal_separator
+                        + _natural_words(after_p)
+                        + DECIMAL_PLACES[len(after_p)]
+                )
         return _natural_words(before_p)
     return _natural_words(before_p)
 
