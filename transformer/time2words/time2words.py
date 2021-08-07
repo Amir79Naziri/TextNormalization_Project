@@ -22,7 +22,7 @@ def words(
 
 def find_time(
         time: str,
-        random_result
+        random_result=False
 ) -> str:
     times = time.split(':')
     counter = 0
@@ -50,24 +50,73 @@ def find_time(
         if minutes is None or hours is None:
             raise TypeError('invalid input type for words function', time)
 
+        mode = 'AM'
         if hours <= 12 and (re.search(r'PM|pm|Pm|pM', time) is not None or
                             re.search('بعد ازظهر|بعداز ظهر|بعد از ظهر|بعدازظهر', time) is not None):
-            hours = hours + 12
+            mode = 'PM'
 
-        if hours == 24:
-            hours = 0
-
-        if hours > 24 or minutes > 60 or (seconds is not None and seconds > 60):
+        if hours > 24 or minutes > 60 or (seconds is not None and seconds > 60) or (mode == 'PM' and hours + 12 > 24):
             raise TypeError('invalid input type for words function', time)
 
-        if hours != 0:
-            return num2words.words(hours) + ' و ' + num2words.words(minutes) + ' دقیقه' + \
-                   (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '')
+        if not random_result:
+            return v1(hours, minutes, seconds, mode)
         else:
-            return num2words.words(minutes) + ' دقیقه' + \
-                   (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '') + ' بامداد'
+            rand = random.randint(1, 4)
+            if rand == 1:
+                return v1(hours, minutes, seconds, mode)
+            elif rand == 2:
+                return v2(hours, minutes, seconds, mode)
+            elif rand == 3:
+                return v3(hours, minutes, seconds, mode)
+            else:
+                return v4(hours, minutes, seconds, mode)
 
     raise TypeError('invalid input type for words function', time)
+
+
+def v1(hours, minutes, seconds, mode):
+    if mode == 'PM':
+        hours += 12
+    if hours == 24:
+        hours = 0
+
+    if hours != 0:
+        return num2words.words(hours) + ' و ' + num2words.words(minutes) + ' دقیقه' + \
+               (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '')
+    else:
+        return num2words.words(minutes) + ' دقیقه' + \
+               (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '') + ' بامداد'
+
+
+def v2(hours, minutes, seconds, mode):
+    if mode == 'PM':
+        hours += 12
+
+    return num2words.words(hours) + ' و ' + num2words.words(minutes) + ' دقیقه' + \
+           (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '')
+
+
+def v3(hours, minutes, seconds, mode):
+    if mode == 'PM':
+        hours += 12
+    if hours == 24:
+        hours = 0
+
+    if hours != 0:
+        return num2words.words(hours) + ' و ' + num2words.words(minutes) + ' دقیقه' + \
+               (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '')
+    else:
+        return num2words.words(minutes) + ' دقیقه' + \
+               (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '') + ' نیمه شب'
+
+
+def v4(hours, minutes, seconds, mode):
+    if mode == 'AM' and hours > 12:
+        hours -= 12
+
+    return num2words.words(hours) + ' و ' + num2words.words(minutes) + ' دقیقه' + \
+           (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '') + \
+           (' ' + 'بعد از ظهر' if mode == 'PM' else 'قبل از ظهر')
 
 
 @words.register(str)
@@ -93,6 +142,8 @@ def _(
             (re.search('بعد ازظهر|بعداز ظهر|بعد از ظهر|بعدازظهر', time[0]) is not None) or \
             (re.search('بعد ازظهر|بعداز ظهر|بعد از ظهر|بعدازظهر', time[1]) is not None) or \
             (re.search('قبل از ظهر|قبل ازظهر', time[0]) is not None) or \
-            (re.search('قبل از ظهر|قبل ازظهر', time[1]) is not None):
+            (re.search('قبل از ظهر|قبل ازظهر', time[1]) is not None) or \
+            (re.search('دقیقه', time[0]) is not None) or \
+            (re.search('دقیقه', time[1]) is not None):
         return find_time(''.join(time), random_result)
     raise TypeError('invalid input type for words function', time)
