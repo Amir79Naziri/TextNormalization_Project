@@ -93,7 +93,7 @@ def v2(hours, minutes, seconds, mode):
         hours += 12
 
     return num2words.words(hours) + ' و ' + num2words.words(minutes) + ' دقیقه' + \
-           (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '')
+        (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '')
 
 
 def v3(hours, minutes, seconds, mode):
@@ -115,8 +115,8 @@ def v4(hours, minutes, seconds, mode):
         hours -= 12
 
     return num2words.words(hours) + ' و ' + num2words.words(minutes) + ' دقیقه' + \
-           (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '') + \
-           (' ' + 'بعد از ظهر' if mode == 'PM' else 'قبل از ظهر')
+        (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '') + \
+        (' ' + 'بعد از ظهر' if mode == 'PM' else 'قبل از ظهر')
 
 
 @words.register(str)
