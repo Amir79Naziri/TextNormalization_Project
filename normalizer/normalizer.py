@@ -5,6 +5,7 @@ from transformer import num2words
 from transformer import phone2words
 from transformer import time2words
 from transformer.phone2words import KEYWORDS
+from transformer.punctuation2words import punctuation2words
 import re
 
 
@@ -104,10 +105,16 @@ def normalize(
     res = part_normalizer(res, max_seq=2, normalizer_module=currency2words, random_result=random_result)
     res = part_normalizer(res, max_seq=2, normalizer_module=measurement2words, random_result=random_result)
     res = part_normalizer(res, max_seq=1, normalizer_module=num2words, random_result=random_result)
-    normalized = re.sub(r'\s+', ' ', ' '.join(res)).strip()
+    res = re.sub(r'\s+', ' ', ' '.join(res)).strip()
+
+    normalized = ''
+    for c in res:
+        normalized += punctuation2words.punctuation_map(c)
+
+    normalized = re.sub(r'\s+', ' ', normalized).strip()
     return normalized
 
 
 if __name__ == '__main__':
     txt = input().split()
-    print(normalize(txt, 'STT'))
+    print(normalize(txt, 'TTS'))
