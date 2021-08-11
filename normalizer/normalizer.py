@@ -103,7 +103,7 @@ def normalize(
     res = part_normalizer(res, max_seq=1, normalizer_module=phone2words,
                           classifier=phone_classifier, random_result=random_result)
     res = part_normalizer(res, max_seq=2, normalizer_module=currency2words, random_result=random_result)
-    res = part_normalizer(res, max_seq=2, normalizer_module=measurement2words, random_result=random_result)
+    res = part_normalizer(res, max_seq=3, normalizer_module=measurement2words, random_result=random_result)
     res = part_normalizer(res, max_seq=1, normalizer_module=num2words, random_result=random_result)
     res = re.sub(r'\s+', ' ', ' '.join(res)).strip()
 

@@ -129,10 +129,13 @@ def words(
         scientific_separator = random.choice([' در ده به توان ', ' ضربدر ده به قوهٔ ', ' ضربدر ده به توان ',
                                               ' در ده به نمای '])
     if isinstance(number, str):
-        number_ = re.findall(r'[-+]?\d+e[-+]?\d+|[-+]?\d+/[-+]?\d+|[-+]?\d*\.\d+|[-+]?\d+', number)
+        number_ = re.findall(r'[-+]?\d+e[-+]?\d+|[-+]?\d+/[-+]?\d+|\d*\.\d+-|[-+]?\d*\.\d+|\d+-|[-+]?\d+', number)
 
         for n in number_:
             index = number.index(n)
+            if re.match(r'\d*\.\d+-', n) is not None or re.match(r'\d+-', n) is not None:
+                n = '-' + str(n)[:-1]
+
             res = __words(n, positive=positive, negative=negative, decimal_separator=decimal_separator,
                           fraction_separator=fraction_separator, ordinal_denominator=ordinal_denominator,
                           scientific_separator=scientific_separator, mode=mode)

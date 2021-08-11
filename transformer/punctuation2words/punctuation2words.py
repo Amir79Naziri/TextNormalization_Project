@@ -38,16 +38,16 @@ NEW_LINES = ['سر خط', 'خط جدید', 'سر سطر', 'پاراگراف جد
 
 def punctuation_map(
         char: str,
-        random_result: bool = False
+        mode: str = 'TTS'
 ) -> str:
     if char == '\n':
-        if not random_result:
-            return NEW_LINES[0]
-        else:
+        if mode == 'TTS':
             rand = random.randint(0, 3)
             return NEW_LINES[rand]
+        else:
+            pass
     else:
-        if not random_result:
+        if mode == 'TTS':
             try:
                 return PUNCTUATION_MAP[char][0]
             except KeyError:
