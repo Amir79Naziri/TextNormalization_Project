@@ -130,10 +130,10 @@ def find_measurement(
                       r'[-+]?\d*\.\d+|\d+-|[-+]?\d+', measure)
     if match is not None:
         number = match.group()
-        while match is not None:
-            measure = re.sub(number, '', measure)
-            match = re.search(r'[-+]?\d+e[-+]?\d*\.\d+|[-+]?\d+e[-+]?\d+|[-+]?\d+/[-+]?\d+|[-+]?\d*\.\d+|[-+]?\d+',
-                              measure)
+        # while match is not None:
+        #     measure = re.sub(number, '', measure)
+        #     match = re.search(r'[-+]?\d+e[-+]?\d*\.\d+|[-+]?\d+e[-+]?\d+|[-+]?\d+/[-+]?\d+|[-+]?\d*\.\d+|[-+]?\d+',
+        #                       measure)
 
         for meas in MEASUREMENTS:
             match = re.search(meas, measure)

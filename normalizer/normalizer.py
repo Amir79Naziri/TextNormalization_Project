@@ -92,7 +92,7 @@ def normalize(
         tokenized_text: list,
         mode: str
 ) -> str:
-    if mode == 'TTS':
+    if mode == 'TTSv1' or 'TTSv2':
         random_result = False
     elif mode == 'STT':
         random_result = True
@@ -108,8 +108,9 @@ def normalize(
     res = re.sub(r'\s+', ' ', ' '.join(res)).strip()
 
     normalized = ''
+
     for c in res:
-        normalized += punctuation2words.punctuation_map(c)
+        normalized += punctuation2words.words(c, mode)
 
     normalized = re.sub(r'\s+', ' ', normalized).strip()
     return normalized
@@ -117,4 +118,4 @@ def normalize(
 
 if __name__ == '__main__':
     txt = input().split()
-    print(normalize(txt, 'TTS'))
+    print(normalize(txt, 'TTSv2'))

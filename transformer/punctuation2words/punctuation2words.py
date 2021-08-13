@@ -1,6 +1,6 @@
 import random
 
-PUNCTUATION_MAP = {
+STT_PUNCTUATION_MAP = {
     '.': [' نقطه '],
     ':': [' دو نقطه '],
     '،': [' ویرگول ', ' کاما '],
@@ -30,27 +30,73 @@ PUNCTUATION_MAP = {
     '<': [' بزرگتر '],
     '>': [' کوچکتر '],
     '\'': [' کوتیشن '],
-    '"': [' دابل کوتیشن ']
+    '"': [' دابل کوتیشن '],
+    '~': [' '],
+    '`': [' '],
+    '$': [' '],
+    '^': [' '],
+    '\\': [' '],
+    ',': [' و '],
+    '÷': [' تقسیم '],
+    '×': [' ضرب ']
+}
+
+TSS_PUNCTUATION_MAP = {
+    '.': [' . ', ' <SIL> '],
+    ':': [' : ', ' <SIL> '],
+    '،': [' ، ', ' <SIL> '],
+    '_': [' '],
+    '-': [' '],
+    '/': [' ممیز '],
+    '٪': [' درصد '],
+    '%': [' درصد '],
+    '؛': [' ؛ ', ' <SIL> '],
+    '؟': [' ؟ ', ' '],
+    '?': [' ? ', ' '],
+    '!': [' ! ', ' '],
+    '(': [' ( '],
+    ')': [' ) '],
+    '[': [' [ '],
+    ']': [' ] '],
+    '«': [' « '],
+    '»': [' » '],
+    '…': [' … ', ' <SIL> '],
+    '@': [' @ '],
+    '#': [' '],
+    '&': [' '],
+    '*': [' * '],
+    '+': [' + '],
+    '=': [' = '],
+    '÷': [' ÷ '],
+    '×': [' × '],
+    '|': [' '],
+    '<': [' < '],
+    '>': [' > '],
+    '\'': [' \' '],
+    '"': [' " '],
+    '~': [' '],
+    '`': [' '],
+    '$': [' '],
+    '^': [' '],
+    '\\': [' '],
+    ',': [' و '],
 }
 
 NEW_LINES = ['سر خط', 'خط جدید', 'سر سطر', 'پاراگراف جدید']
 
 
-def punctuation_map(
+def words(
         char: str,
-        mode: str = 'TTS'
+        mode: str = 'TTSv1'
 ) -> str:
-    if char == '\n':
-        if mode == 'TTS':
-            rand = random.randint(0, 3)
-            return NEW_LINES[rand]
-        else:
-            pass
-    else:
-        if mode == 'TTS':
-            try:
-                return PUNCTUATION_MAP[char][0]
-            except KeyError:
-                return char
-        else:
-            pass
+    try:
+        if mode == 'TTSv1':
+            return TSS_PUNCTUATION_MAP[char][0]
+        elif mode == 'TTSv2':
+            return TSS_PUNCTUATION_MAP[char][-1]
+        elif mode == 'STT':
+            res = STT_PUNCTUATION_MAP[char]
+            return res[random.randint(0, len(res) - 1)]
+    except KeyError:
+        pass
+    return char
