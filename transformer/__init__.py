@@ -5,3 +5,4 @@ from .num2words import num2words
 from .phone2words import phone2words
 from .time2words import time2words
 from .punctuation2words import punctuation2words
+from .miscellaneous2words import miscellaneous2words

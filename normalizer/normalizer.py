@@ -4,8 +4,10 @@ from transformer import measurement2words
 from transformer import num2words
 from transformer import phone2words
 from transformer import time2words
+from transformer import punctuation2words
+from transformer import miscellaneous2words
+from transformer.punctuation2words import NEW_LINES
 from transformer.phone2words import KEYWORDS
-from transformer.punctuation2words import punctuation2words
 import re
 
 
@@ -105,6 +107,7 @@ def normalize(
     res = part_normalizer(res, max_seq=2, normalizer_module=currency2words, random_result=random_result)
     res = part_normalizer(res, max_seq=3, normalizer_module=measurement2words, random_result=random_result)
     res = part_normalizer(res, max_seq=1, normalizer_module=num2words, random_result=random_result)
+    res = part_normalizer(res, max_seq=2, normalizer_module=miscellaneous2words, random_result=random_result)
     res = re.sub(r'\s+', ' ', ' '.join(res)).strip()
 
     normalized = ''
