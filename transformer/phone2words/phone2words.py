@@ -33,20 +33,35 @@ def find_phone(
         phone: str,
         random_result: bool = False
 ) -> str:
-    match = re.search(r'[+]', phone)
-    if match is not None and match.start() == 0:
-        phone = phone[1:]
-    elif match is not None and match.end() == len(phone):
-        phone = phone[:-1]
+    if len(re.findall(r'-', phone)) > 1:
+        parts = phone.split('-')
+        if not random_result:
+            return 'خط تیره'.join([v1(i) for i in parts])
+        else:
+            output = list()
+            for i in parts:
+                rand = random.randint(1, 2)
+                if rand == 1:
+                    output.append(v1(i))
+                else:
+                    output.append(v2(i))
+            return 'خط تیره'.join(output)
 
-    if not random_result:
-        return v1(phone)
     else:
-        rand = random.randint(1, 3)
-        if rand == 1 or rand == 2:
+        match = re.search(r'[+]', phone)
+        if match is not None and match.start() == 0:
+            phone = phone[1:]
+        elif match is not None and match.end() == len(phone):
+            phone = phone[:-1]
+
+        if not random_result:
             return v1(phone)
         else:
-            return v2(phone)
+            rand = random.randint(1, 3)
+            if rand == 1 or rand == 2:
+                return v1(phone)
+            else:
+                return v2(phone)
 
 
 def v2(phone):
