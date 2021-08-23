@@ -131,6 +131,8 @@ def words(
     if isinstance(number, str):
         number_ = re.findall(r'[-+]?\d+e[-+]?\d+|[-+]?\d+/[-+]?\d+|\d*\.\d+-|[-+]?\d*\.\d+|\d+-|[-+]?\d+', number)
 
+        if len(number_) == 0:
+            raise TypeError('invalid input type for words function', number)
         for n in number_:
             index = number.index(n)
             if re.match(r'\d*\.\d+-', n) is not None or re.match(r'\d+-', n) is not None:

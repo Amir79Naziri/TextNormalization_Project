@@ -115,9 +115,14 @@ def find_date_std(
     for de in delimiter:
         sp = date.split(de)
         if len(sp) == 3:
-            match = re.search(r'\d+', sp[2])
-            match2 = re.search(r'\d+', sp[1])
-            match3 = re.search(r'\d+', sp[0])
+            if delimiter == '-':
+                match = re.search(r'\d+', sp[2])
+                match2 = re.search(r'\d+', sp[1])
+                match3 = re.search(r'\d+', sp[0])
+            else:
+                match = re.search(r'\d+', sp[0])
+                match2 = re.search(r'\d+', sp[1])
+                match3 = re.search(r'\d+', sp[2])
             if match is None or match2 is None or match3 is None:
                 break
             year = num2words.words(match.group())
