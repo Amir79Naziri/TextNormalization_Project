@@ -91,34 +91,89 @@ def phone_classifier(
 
 
 def normalize(
-        tokenized_text: list,
-        mode: str
+        *args,
+        **kwargs,
 ) -> str:
+
+    try:
+        mode = kwargs['mode']
+    except KeyError:
+        mode = 'TTSv1'
     if mode == 'TTSv1' or 'TTSv2':
         random_result = False
     elif mode == 'STT':
         random_result = True
     else:
         raise TypeError('TTS or STT does not declared', mode)
-    res = part_normalizer(tokenized_text, max_seq=5, normalizer_module=date2words, random_result=random_result)
-    res = part_normalizer(res, max_seq=4, normalizer_module=time2words, reverse=True, random_result=random_result)
-    res = part_normalizer(res, max_seq=1, normalizer_module=phone2words,
-                          classifier=phone_classifier, random_result=random_result)
-    res = part_normalizer(res, max_seq=2, normalizer_module=currency2words, random_result=random_result)
-    res = part_normalizer(res, max_seq=3, normalizer_module=measurement2words, random_result=random_result)
-    res = part_normalizer(res, max_seq=1, normalizer_module=num2words, random_result=random_result)
-    res = part_normalizer(res, max_seq=2, normalizer_module=miscellaneous2words, random_result=random_result)
+
+    try:
+        res = args[0]
+        if not isinstance(res, list):
+            raise Exception('tokenized text is not defined')
+    except IndexError:
+        raise Exception('tokenized text is not defined')
+
+
+    date = time = phone = currency = measurement = number = miscellaneous = punctuation = False
+    for i in range(1, len(args)):
+        if isinstance(args[i], str):
+            if 'date' in args[i] or '-d' in args[i]:
+                date = True
+            elif 'time' in args[i] or '-t' in args[i]:
+                time = True
+            elif 'phone' in args[i] or '-p' in args[i]:
+                phone = True
+            elif 'currency' in args[i] or '-c' in args[i]:
+                currency = True
+            elif 'measure' in args[i] or '-m' in args[i]:
+                measurement = True
+            elif 'number' in args[i] or '-n' in args[i]:
+                number = True
+            elif 'miscellaneous' in args[i] or '-mi' in args[i]:
+                miscellaneous = True
+            elif 'punctuation' in args[i] or '-pu' in args[i]:
+                punctuation = True
+
+    total = not(date or time or phone or currency or measurement or number or miscellaneous or punctuation)
+
+
+    if total:
+        date = time = phone = currency = measurement = number = miscellaneous = punctuation = True
+    if date:
+        res = part_normalizer(res, max_seq=5, normalizer_module=date2words,
+                              random_result=random_result)
+    if time:
+        res = part_normalizer(res, max_seq=4, normalizer_module=time2words, reverse=True,
+                              random_result=random_result)
+    if phone:
+        res = part_normalizer(res, max_seq=1, normalizer_module=phone2words,
+                              classifier=phone_classifier, random_result=random_result)
+    if currency:
+        res = part_normalizer(res, max_seq=2, normalizer_module=currency2words,
+                              random_result=random_result)
+    if measurement:
+        res = part_normalizer(res, max_seq=3, normalizer_module=measurement2words,
+                              random_result=random_result)
+    if number:
+        res = part_normalizer(res, max_seq=1, normalizer_module=num2words,
+                              random_result=random_result)
+    if miscellaneous:
+        res = part_normalizer(res, max_seq=2, normalizer_module=miscellaneous2words,
+                              random_result=random_result)
+
     res = re.sub(r'\s+', ' ', ' '.join(res)).strip()
 
-    normalized = ''
+    if punctuation:
+        normalized = ''
+        for c in res:
+            normalized += punctuation2words.words(c, mode)
 
-    for c in res:
-        normalized += punctuation2words.words(c, mode)
+        normalized = re.sub(r'\s+', ' ', normalized).strip()
+        res = normalized
 
-    normalized = re.sub(r'\s+', ' ', normalized).strip()
-    return normalized
+    return res
 
 
 if __name__ == '__main__':
     txt = input().split()
-    print(normalize(txt, 'TTSv2'))
+    print(normalize(txt, 'date', mode='TTSv2'))
