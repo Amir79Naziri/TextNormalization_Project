@@ -12,7 +12,7 @@ import re
 from typing import Tuple
 
 
-def part_normalizer(
+def __part_normalizer(
         tokenized_text: list,
         max_seq: int,
         normalizer_module,
@@ -78,7 +78,7 @@ def part_normalizer(
     return tokenized_text, change_counter
 
 
-def phone_classifier(
+def __phone_classifier(
         index: int,
         tokenized_text: list,
         domain: int = 4
@@ -138,28 +138,28 @@ def normalize(
     if total:
         date = time = phone = currency = measurement = number = miscellaneous = punctuation = True
     if date:
-        res, status_dict['تاریخ'] = part_normalizer(res, max_seq=5, normalizer_module=date2words,
-                                                    random_result=random_result)
+        res, status_dict['تاریخ'] = __part_normalizer(res, max_seq=5, normalizer_module=date2words,
+                                                      random_result=random_result)
     if time:
-        res, status_dict['زمان'] = part_normalizer(res, max_seq=4, normalizer_module=time2words,
-                                                   reverse=True,
-                                                   random_result=random_result)
-    if phone:
-        res, status_dict['تلفن و شماره شناسایی'] = part_normalizer(res, max_seq=1, normalizer_module=phone2words,
-                                                                   classifier=phone_classifier,
-                                                                   random_result=random_result)
-    if currency:
-        res, status_dict['واحد های ارزی'] = part_normalizer(res, max_seq=2, normalizer_module=currency2words,
-                                                            random_result=random_result)
-    if measurement:
-        res, status_dict['کمیت های اندازه گیری'] = part_normalizer(res, max_seq=3, normalizer_module=measurement2words,
-                                                                   random_result=random_result)
-    if number:
-        res, status_dict['اعداد'] = part_normalizer(res, max_seq=1, normalizer_module=num2words,
-                                                    random_result=random_result)
-    if miscellaneous:
-        res, status_dict['متفرقه'] = part_normalizer(res, max_seq=2, normalizer_module=miscellaneous2words,
+        res, status_dict['زمان'] = __part_normalizer(res, max_seq=4, normalizer_module=time2words,
+                                                     reverse=True,
                                                      random_result=random_result)
+    if phone:
+        res, status_dict['تلفن و شماره شناسایی'] = __part_normalizer(res, max_seq=1, normalizer_module=phone2words,
+                                                                     classifier=__phone_classifier,
+                                                                     random_result=random_result)
+    if currency:
+        res, status_dict['واحد های ارزی'] = __part_normalizer(res, max_seq=2, normalizer_module=currency2words,
+                                                              random_result=random_result)
+    if measurement:
+        res, status_dict['کمیت های اندازه گیری'] = __part_normalizer(res, max_seq=3, normalizer_module=measurement2words,
+                                                                     random_result=random_result)
+    if number:
+        res, status_dict['اعداد'] = __part_normalizer(res, max_seq=1, normalizer_module=num2words,
+                                                      random_result=random_result)
+    if miscellaneous:
+        res, status_dict['متفرقه'] = __part_normalizer(res, max_seq=2, normalizer_module=miscellaneous2words,
+                                                       random_result=random_result)
 
     res = re.sub(r'\s+', ' ', ' '.join(res)).strip()
 
@@ -177,4 +177,3 @@ def normalize(
         status_dict['علائم نگارشی'] = counter
 
     return res, status_dict
-
