@@ -93,31 +93,15 @@ def phone_classifier(
 
 
 def normalize(
+        text: list,
         *args,
-        **kwargs,
 ) -> Tuple[str, dict]:
 
-    try:
-        mode = kwargs['mode']
-    except KeyError:
-        mode = 'TTSv1'
-    if mode == 'TTSv1' or 'TTSv2':
-        random_result = False
-    elif mode == 'STT':
-        random_result = True
-    else:
-        raise TypeError('TTS or STT does not declared', mode)
 
-    try:
-        res = args[0]
-        if not isinstance(res, list):
-            raise Exception('tokenized text is not defined')
-    except IndexError:
-        raise Exception('tokenized text is not defined')
-
-
+    res = text
+    mode = 'TTSv1'
     date = time = phone = currency = measurement = number = miscellaneous = punctuation = False
-    for i in range(1, len(args)):
+    for i in range(0, len(args)):
         if isinstance(args[i], str):
             if 'date' in args[i] or '-d' in args[i]:
                 date = True
@@ -135,8 +119,20 @@ def normalize(
                 miscellaneous = True
             elif 'punctuation' in args[i] or '-pu' in args[i]:
                 punctuation = True
+            elif 'TTSv2' in args[i]:
+                mode = 'TTSv2'
+            elif 'STT' in args[i]:
+                mode = 'STT'
 
-    total = not(date or time or phone or currency or measurement or number or miscellaneous or punctuation)
+    if mode == 'TTSv1' or 'TTSv2':
+        random_result = False
+    elif mode == 'STT':
+        random_result = True
+    else:
+        raise TypeError('TTS or STT does not declared', mode)
+
+
+    total = not (date or time or phone or currency or measurement or number or miscellaneous or punctuation)
 
     status_dict = dict()
     if total:
@@ -182,7 +178,3 @@ def normalize(
 
     return res, status_dict
 
-
-if __name__ == '__main__':
-    txt = input().split()
-    print(normalize(txt, mode='TTSv2'))
