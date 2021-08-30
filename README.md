@@ -27,7 +27,7 @@ python main.py inp.txt out.txt
 ```
 normalize time and date for speech-to-text
 ```bash       
-python main.py inp.txt out.txt TTsv2 -t -d
+python main.py inp.txt out.txt TTSv2 -t -d
 ```  
 
   
