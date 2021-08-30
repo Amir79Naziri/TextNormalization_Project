@@ -18,7 +18,7 @@ for text-to-speech and speech-to-text.
 ## Usage  
 
 ```bash
-python main.py [input file address] [output file address] [VERSION] [TYPE1, TYPE2, ....]
+python main.py [input file address] [output file address] [version] [type1, type2, ....]
 ```
 ### examples
 normalize all types for text-to-speech version 1
@@ -30,9 +30,9 @@ normalize time and date for speech-to-text
 python main.py inp.txt out.txt TTsv2 -t -d
 ```
 
-<span style="font-size:1;">VERSION :  TTSv1(default) , TTSv2, STT </span>
-<span style="font-size:1;">TYPE# : by declaring a type the normalizer Limited to the declared type !</span>
+<span style="font-size:1;">version :  TTSv1(default) , TTSv2, STT </span>   
+<span style="font-size:1;">type : by declaring a type the normalizer Limited to the declared type !</span>   
 <span style="font-size:1;">The difference between TTS version 1 and TTS version 2 is in the way the punctuations are normalized</span>
 
 ## License and Contribution
-All rights reserved to [DeepMine](http://deepmine.ir/) company .
+All rights reserved to [DeepMine](http://deepmine.ir/) company.
