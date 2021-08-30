@@ -13,7 +13,7 @@ it contains types below :
 * normalizing punctuation
 * normalizing miscellaneous abbreviations
 
-for text-to-speech and speech-to-text.
+for text-to-speech and speech-to-text (TTSv1(default) , TTSv2, STT).
 
 ## Usage  
 
@@ -29,10 +29,8 @@ normalize time and date for speech-to-text
 ```bash       
 python main.py inp.txt out.txt TTsv2 -t -d
 ```
-
-<span style="font-size:1;">version :  TTSv1(default) , TTSv2, STT </span>   
-<span style="font-size:1;">type : by declaring a type the normalizer Limited to the declared type !</span>   
-<span style="font-size:1;">The difference between TTS version 1 and TTS version 2 is in the way the punctuations are normalized</span>
-
-## License and Contribution
+  
+1. by declaring a type the normalizer Limited to the declared type !  
+2. The difference between TTS version 1 and TTS version 2 is in the way the punctuations are normalized
+## License and Contributing
 All rights reserved to [DeepMine](http://deepmine.ir/) company.
