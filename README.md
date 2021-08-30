@@ -30,9 +30,9 @@ normalize time and date for speech-to-text
 python main.py inp.txt out.txt TTsv2 -t -d
 ```
 
-VERSION :  TTSv1(default) , TTSv2, STT
-TYPE# : by declaring a type the normalizer Limited to the declared type !
-The difference between TTS version 1 and TTS version 2 is in the way the punctuations are normalized
+<span style="font-size:1;">VERSION :  TTSv1(default) , TTSv2, STT </span>
+<span style="font-size:1;">TYPE# : by declaring a type the normalizer Limited to the declared type !</span>
+<span style="font-size:1;">The difference between TTS version 1 and TTS version 2 is in the way the punctuations are normalized</span>
 
 ## License and Contribution
 All rights reserved to [DeepMine](http://deepmine.ir/) company .
