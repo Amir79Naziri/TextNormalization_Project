@@ -1,6 +1,7 @@
 # Text Normalizer
 
-This project implements text normalization for Farsi(Persian) language in the traditional way.
+This project implements text normalization for Farsi(Persian) language in the traditional way.  
+
   
 it contains types below :
 * normalizing numbers 
@@ -25,13 +26,13 @@ normalize all types for text-to-speech version 1
 python main.py inp.txt out.txt 
 ```
 normalize time and date for speech-to-text
-```bash       ​
+```bash       
 python main.py inp.txt out.txt TTsv2 -t -d
 ```
 
-* VERSION :  TTSv1(default) , TTSv2, STT
-* TYPE# : by declaring a type the normalizer Limited to the declared type !
-* The difference between TTS version 1 and TTS version 2 is in the way the punctuations are normalized
+VERSION :  TTSv1(default) , TTSv2, STT
+TYPE# : by declaring a type the normalizer Limited to the declared type !
+The difference between TTS version 1 and TTS version 2 is in the way the punctuations are normalized
 
 ## License and Contribution
 All rights reserved to [DeepMine](http://deepmine.ir/) company .
