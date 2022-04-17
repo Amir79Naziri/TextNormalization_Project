@@ -1,4 +1,5 @@
 from randomGenerator.numberGenerator import numberGenerator
+from randomGenerator.currencyGenerator import currencyGenerator
 
 
 def _file_writer(filename, result):
@@ -6,11 +7,15 @@ def _file_writer(filename, result):
         f.writelines(result)
 
 
-def generate(filenames):
-    for filename in filenames:
-        lines = numberGenerator.generate(1000)
-        _file_writer(filename, lines)
+def generate(**kwargs):
+    for key in kwargs:
+        lines = []
+        if key == 'number':
+            lines = numberGenerator.generate(1000)
+        elif key == 'currency':
+            lines = currencyGenerator.generate(1000)
+        _file_writer(kwargs[key], lines)
 
 
 if __name__ == '__main__':
-    generate(['data.txt'])
+    generate(number='data/numbers.txt', currency='data/currency.txt')
