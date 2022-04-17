@@ -1,6 +1,7 @@
 from randomGenerator.numberGenerator import numberGenerator
 from randomGenerator.currencyGenerator import currencyGenerator
 from randomGenerator.measurementGenerator import measurementGenerator
+from randomGenerator.timeGenerator import timeGenerator
 
 
 def _file_writer(filename, result):
@@ -17,8 +18,11 @@ def generate(**kwargs):
             lines = currencyGenerator.generate(1000)
         elif key == 'measurement':
             lines = measurementGenerator.generate(1000)
+        elif key == 'time':
+            lines = timeGenerator.generate(1000)
         _file_writer(kwargs[key], lines)
 
 
 if __name__ == '__main__':
-    generate(number='data/numbers.txt', currency='data/currency.txt', measurement='data/measurement.txt')
+    generate(number='data/numbers.txt', currency='data/currency.txt',
+             measurement='data/measurement.txt', time='data/time.txt')

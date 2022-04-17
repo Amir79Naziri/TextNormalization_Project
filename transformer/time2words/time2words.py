@@ -55,6 +55,11 @@ def find_time(
                             re.search('بعد ازظهر|بعداز ظهر|بعد از ظهر|بعدازظهر', time) is not None):
             mode = 'PM'
 
+        if hours > 12 and (re.search(r'PM|pm|Pm|pM', time) is None and
+                            re.search('بعد ازظهر|بعداز ظهر|بعد از ظهر|بعدازظهر', time) is None):
+            mode = 'PM'
+            hours -= 12
+
         if hours > 24 or minutes > 60 or (seconds is not None and seconds > 60) or (mode == 'PM' and hours + 12 > 24):
             raise TypeError('invalid input type for words function', time)
 
@@ -116,7 +121,7 @@ def v4(hours, minutes, seconds, mode):
 
     return num2words.words(hours) + ' و ' + num2words.words(minutes) + ' دقیقه' + \
         (' و ' + num2words.words(seconds) + ' ثانیه' if seconds is not None else '') + \
-        (' ' + 'بعد از ظهر' if mode == 'PM' else 'قبل از ظهر')
+        (' ' + ' بعد از ظهر' if mode == 'PM' else ' قبل از ظهر')
 
 
 @words.register(str)
