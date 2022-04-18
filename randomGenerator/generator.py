@@ -13,7 +13,6 @@ def _file_writer(filename, result):
 
 def generate(**kwargs):
     for key in kwargs:
-        lines = []
         if key == 'number':
             lines = numberGenerator.generate(1000)
         elif key == 'currency':
