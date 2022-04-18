@@ -3,6 +3,7 @@ from typing import Union
 from functools import singledispatch
 import re
 import random
+from random import choices
 
 NUM2MONTHS = {
     1: 'فروردین',
@@ -61,6 +62,78 @@ NUM2MONTHS = {
     '١٢': 'اسفند'
 }
 
+EN_NUM2MONTHS = {
+    1: 'ژانویه',
+    '1': 'ژانویه',
+    '01': 'ژانویه',
+    '١': 'ژانویه',
+    '۰١': 'ژانویه',
+    2: 'فوریه',
+    '2': 'فوریه',
+    '02': 'فوریه',
+    '٢': 'فوریه',
+    '۰٢': 'فوریه',
+    3: 'مارس',
+    '3': 'مارس',
+    '03': 'مارس',
+    '۳': 'مارس',
+    '۰۳': 'مارس',
+    4: 'آوریل',
+    '4': 'آوریل',
+    '04': 'آوریل',
+    '۴': 'آوریل',
+    '۰۴': 'آوریل',
+    5: 'مه',
+    '5': 'مه',
+    '05': 'مه',
+    '۵': 'مه',
+    '۰۵': 'مه',
+    6: 'ژوئن',
+    '6': 'ژوئن',
+    '06': 'ژوئن',
+    '۶': 'ژوئن',
+    '۰۶': 'ژوئن',
+    7: 'ژوئیه',
+    '7': 'ژوئیه',
+    '07': 'ژوئیه',
+    '۷': 'ژوئیه',
+    '۰۷': 'ژوئیه',
+    8: 'اوت',
+    '8': 'اوت',
+    '08': 'اوت',
+    '۸': 'اوت',
+    '۰۸': 'اوت',
+    9: 'سپتامبر',
+    '9': 'سپتامبر',
+    '09': 'سپتامبر',
+    '۹': 'سپتامبر',
+    '۰۹': 'سپتامبر',
+    10: 'اکتبر',
+    '10': 'اکتبر',
+    '١۰': 'اکتبر',
+    11: 'نوامبر',
+    '11': 'نوامبر',
+    '١١': 'نوامبر',
+    12: 'دسامبر',
+    '12': 'دسامبر',
+    '١٢': 'دسامبر'
+}
+
+EN_MONTHS2NUM = {
+    'ژانویه': 1,
+    'فوریه': 2,
+    'مارس': 3,
+    'آوریل': 4,
+    'مه': 5,
+    'ژوئن': 6,
+    'ژوئیه': 7,
+    'اوت': 8,
+    'سپتامبر': 9,
+    'اکتبر': 10,
+    'نوامبر': 11,
+    'دسامبر': 12
+}
+
 MONTHS2NUM = {
     'فروردین': 1,
     'اردیبهشت': 2,
@@ -91,6 +164,21 @@ MONTHS = [
     'اسفند'
 ]
 
+EN_MONTHS = [
+    'ژانویه',
+    'فوریه',
+    'مارس',
+    'آوریل',
+    'مه',
+    'ژوئن',
+    'ژوئیه',
+    'اوت',
+    'سپتامبر',
+    'اکتبر',
+    'نوامبر',
+    'دسامبر'
+]
+
 
 # 2014-03-01
 # 2014/03/01
@@ -103,6 +191,7 @@ MONTHS = [
 @singledispatch
 def words(
         date: Union[str, list],
+        IR: bool = True,
         random_result: bool = False
 ) -> str:
     raise TypeError('invalid input type for words function', date)
@@ -110,6 +199,7 @@ def words(
 
 def find_date_std(
         date: str, delimiter: tuple = ('/', '.', '-'),
+        IR: bool = True,
         random_result: bool = False
 ) -> str:
     for de in delimiter:
@@ -127,58 +217,79 @@ def find_date_std(
                 break
             year = num2words.words(match.group())
             try:
-                month = NUM2MONTHS[match2.group()]
+                if IR:
+                    month = NUM2MONTHS[match2.group()]
+                else:
+                    month = EN_NUM2MONTHS[match2.group()]
                 number_month = num2words.words(match2.group())
             except KeyError:
                 break
             day = num2words.words(match3.group())
             if not random_result:
-                return v1(day, month, year)
+                return v1(day, month, year, IR)
             else:
                 rand = random.randint(1, 4)
                 if rand == 1:
-                    return v1(day, month, year)
+                    return v1(day, month, year, IR)
                 elif rand == 2:
-                    return v2(day, month, year)
+                    return v2(day, month, year, IR)
                 elif rand == 3:
-                    return v3(day, number_month, year)
+                    return v3(day, number_month, year, IR)
                 else:
-                    return v4(day, number_month, year)
+                    return v4(day, number_month, year, IR)
     raise TypeError('invalid input type for words function', date)
 
 
-def v1(day, month, year):
-    return day + ' ' + month + ' ' + 'سال ' + year
+def v1(day, month, year, IR):
+    if IR:
+        stmt = choices(['شمسی', 'هجری شمسی', ''], k=1, weights=(0.25, 0.25, 0.5))[0]
+    else:
+        stmt = choices(['میلادی', ''], k=1, weights=(0.35, 0.65))[0]
+    return day + ' ' + month + ' ' + 'سال ' + year + ' ' + stmt
 
 
-def v2(day, month, year):
-    return day + ' ' + month + ' ' + year
+def v2(day, month, year, IR):
+    if IR:
+        stmt = choices(['شمسی', 'هجری شمسی', ''], k=1, weights=(0.25, 0.25, 0.5))[0]
+    else:
+        stmt = choices(['میلادی', ''], k=1, weights=(0.35, 0.65))[0]
+    return day + ' ' + month + ' ' + year + ' ' + stmt
 
 
-def v3(day, number_month, year):
-    return day + ' ' + number_month + ' ' + 'سال ' + year
+def v3(day, number_month, year, IR):
+    if IR:
+        stmt = choices(['شمسی', 'هجری شمسی', ''], k=1, weights=(0.25, 0.25, 0.5))[0]
+    else:
+        stmt = choices(['میلادی', ''], k=1, weights=(0.35, 0.65))[0]
+    return day + ' ' + number_month + ' ' + 'سال ' + year + ' ' + stmt
 
 
-def v4(day, number_month, year):
-    return day + ' ' + number_month + ' ' + year
+def v4(day, number_month, year, IR):
+    if IR:
+        stmt = choices(['شمسی', 'هجری شمسی', ''], k=1, weights=(0.25, 0.25, 0.5))[0]
+    else:
+        stmt = choices(['میلادی', ''], k=1, weights=(0.35, 0.65))[0]
+    return day + ' ' + number_month + ' ' + year + ' ' + stmt
 
 
 @words.register(str)
 def _(
         date: str,
+        IR: bool = True,
         random_result: bool = False
 ) -> str:
-    return find_date_std(date, random_result=random_result)
+    return find_date_std(date, IR=IR, random_result=random_result)
 
 
 @words.register(list)
 def _(
         date: list,
+        IR: bool = True,
         random_result: bool = False
 ) -> str:
     length = len(date)
     if length == 1:
-        return find_date_std(''.join(date), random_result=random_result)
+        return find_date_std(''.join(date), IR=IR, random_result=random_result)
     if 5 >= length >= 2:
         counter = 0
         day, month, number_month = None, None, None
@@ -196,15 +307,25 @@ def _(
             elif counter == 1:
                 match = re.search(r'\d+', d)
                 if match is None:
-                    if d in MONTHS:
-                        month = d
-                        number_month = num2words.words(MONTHS2NUM[month])
+                    if IR:
+                        if d in MONTHS:
+                            month = d
+                            number_month = num2words.words(MONTHS2NUM[month])
+                        else:
+                            continue
                     else:
-                        continue
+                        if d in EN_MONTHS:
+                            month = d
+                            number_month = num2words.words(EN_MONTHS2NUM[month])
+                        else:
+                            continue
                 else:
                     number = int(match.group())
                     try:
-                        month = NUM2MONTHS[number]
+                        if IR:
+                            month = NUM2MONTHS[number]
+                        else:
+                            month = EN_NUM2MONTHS[number]
                         number_month = num2words.words(number)
                     except KeyError:
                         break
@@ -218,16 +339,16 @@ def _(
                 year = num2words.words(number)
 
                 if not random_result:
-                    return v1(day, month, year)
+                    return v1(day, month, year, IR)
                 else:
                     rand = random.randint(1, 4)
                     if rand == 1:
-                        return v1(day, month, year)
+                        return v1(day, month, year, IR)
                     elif rand == 2:
-                        return v2(day, month, year)
+                        return v2(day, month, year, IR)
                     elif rand == 3:
-                        return v3(day, number_month, year)
+                        return v3(day, number_month, year, IR)
                     else:
-                        return v4(day, number_month, year)
+                        return v4(day, number_month, year, IR)
 
     raise TypeError('invalid input type for words function', date)
