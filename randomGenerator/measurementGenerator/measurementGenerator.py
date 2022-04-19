@@ -64,13 +64,13 @@ def generate(n_sample=1):
 
         else:
             if random() >= 0.8:
-                i = (randint(-10, 10)) * \
-                    choices([1, 10, 100, 1000, 10000], k=1, weights=(0.4, 0.4, 0.1, 0.08, 0.02))[0]
+                i = int((randint(-10, 10) * random()) * \
+                    choices([1, 10, 100, 1000, 10000], k=1, weights=(0.4, 0.4, 0.1, 0.08, 0.02))[0])
                 data.append(measurement2words.words(str(i) +
                                                     prefix + ' ' + measurement, random_result=True).strip() + '\n')
             else:
-                i = (randint(-10, 10)) * \
-                    choices([1, 10, 100, 1000, 10000], k=1, weights=(0.6, 0.3, 0.05, 0.03, 0.02))[0]
+                i = int((randint(-10, 10) * random()) * \
+                    choices([1, 10, 100, 1000, 10000], k=1, weights=(0.6, 0.3, 0.05, 0.03, 0.02))[0])
                 power = (randint(-10, 10)) * \
                     choices([1, 10, 100, 1000, 10000], k=1, weights=(0.5, 0.3, 0.1, 0.08, 0.02))[0]
                 data.append(measurement2words.words(str(i) + 'e' + str(power) +
