@@ -35,5 +35,4 @@ python main.py inp.txt out.txt TTSv2 -t -d
 2. The difference between TTS version 1 and TTS version 2 is in the way the punctuations are normalized  
 
 
-## License and Contributing
-All rights reserved to [DeepMine](http://deepmine.ir/) company.
+
