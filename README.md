@@ -1,6 +1,6 @@
 # Text Normalizer
 
-This project implements text normalization for Farsi(Persian) language in the traditional way.  
+This project implements text normalization for Farsi(Persian) language.
 
   
 it contains types below :
